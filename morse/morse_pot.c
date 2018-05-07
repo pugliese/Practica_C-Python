@@ -37,8 +37,8 @@ float forces(float *x, long int* pairs, long int npairs,
 
 }
 
-// OPCION DESACOPLADA ENERGIA-FUERZA
-inline void pair_force(float r, float* delta_r, float mexp, float D,
+// OPCIONES DESACOPLADAS
+inline void pair_force1(float r, float* delta_r, float mexp, float D,
   float alpha, int i, int j, float* force){
 
   float m_force = -2*Dalpha*(1-mexp)*mexp/r;
@@ -51,16 +51,27 @@ inline void pair_force(float r, float* delta_r, float mexp, float D,
 
 }
 
+inline void pair_force2(float r, float* delta_r, float mexp, float D,
+  float alpha, float* force){
 
-float pair_energ(float energy_cut,
-    float mexp, float D){
+  float m_force = -2*Dalpha*(1-mexp)*mexp/r;
+  for(int k=0;k<3;k++){
+    force[k] = m_force*delta_r[k];
+  }
+
+  return 0;
+
+}
+
+
+float pair_energ(float energy_cut, float mexp, float D){
 
   return D*(1-mexp)*(1-mexp) - energy_cut;
 
 }
 
-// OPCION COMBINADA
-float pair_force_energ(float r, float delta_r, float req, float D,
+// OPCION COMBINADA 1
+float pair_force_energ1(float r, float delta_r, float req, float D,
       float alpha, int i, int j, float* force){
 
   float mexp = exp(-alpha*(r-req));
@@ -72,3 +83,27 @@ float pair_force_energ(float r, float delta_r, float req, float D,
   return D*(1-mexp)*(1-mexp);
 
 }
+
+// OPCION COMBINADA 2
+float pair_force_energ2(float r, float delta_r, float req, float D,
+      float alpha, float* force){
+
+  float mexp = exp(-alpha*(r-req));
+  float m_force = -2*alpha*D*(1-mexp)*mexp/r;
+  for(int k=0;k<3;k++){
+    force[k] = m_force*delta_r[k];
+  }
+  return D*(1-mexp)*(1-mexp);
+
+}
+
+
+// Cuestiones:
+// 1) ¿Donde calculo r y chequeo con rcut?
+// 2) ¿Donde calculo mexp?
+// 3) Combinando ambas funciones, me ahorro calcular las cosas
+//    de arriba 2 veces; util en forces, un poco menos en python.
+// 4) Si las paso por parametro, gran parte de las cuentas se
+//    hacen fuera de la funcion.
+// 5) ¿Devuelvo un vector de fuerzas o modifico uno dado?
+//    Devolver lo hace mejor en python pero peor en C.
