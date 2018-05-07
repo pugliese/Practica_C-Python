@@ -36,3 +36,39 @@ float forces(float *x, long int* pairs, long int npairs,
   return energy;
 
 }
+
+// OPCION DESACOPLADA ENERGIA-FUERZA
+inline void pair_force(float r, float* delta_r, float mexp, float D,
+  float alpha, int i, int j, float* force){
+
+  float m_force = -2*Dalpha*(1-mexp)*mexp/r;
+  for(int k=0;k<3;k++){
+    force[3*i+k] = force[3*i+k] + m_force*delta_r[k];
+    force[3*j+k] = force[3*j+k] - m_force*delta_r[k];
+  }
+
+  return 0;
+
+}
+
+
+float pair_energ(float energy_cut,
+    float mexp, float D){
+
+  return D*(1-mexp)*(1-mexp) - energy_cut;
+
+}
+
+// OPCION COMBINADA
+float pair_force_energ(float r, float delta_r, float req, float D,
+      float alpha, int i, int j, float* force){
+
+  float mexp = exp(-alpha*(r-req));
+  float m_force = -2*alpha*D*(1-mexp)*mexp/r;
+  for(int k=0;k<3;k++){
+    force[3*i+k] = force[3*i+k] + m_force*delta_r[k];
+    force[3*j+k] = force[3*j+k] - m_force*delta_r[k];
+  }
+  return D*(1-mexp)*(1-mexp);
+
+}

@@ -36,7 +36,7 @@ class Morse():
     d = np.linalg.norm(s1-s2)
     if d > self.rcut:
       return np.zeros_like(s1)
-    mf = -2*self.D*self.alpha*(1-np.exp(-self.alpha*(d-self.req)))*np.exp(self.alpha*(d-self.req))
+    mf = -2*self.D*self.alpha*(1-np.exp(-self.alpha*(d-self.req)))*np.exp(-self.alpha*(d-self.req))*(s1-s2)/d
     if self.shift_style == 'None':
       return mf
     elif self.shift_style == 'Displace':
