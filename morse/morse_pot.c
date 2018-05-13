@@ -38,54 +38,33 @@ float forces(float *x, long int* pairs, long int npairs,
 }
 
 // OPCIONES DESACOPLADAS
-inline void pair_force1(float r, float* delta_r, float mexp, float D,
-  float alpha, int i, int j, float* force){
-
-  float m_force = -2*Dalpha*(1-mexp)*mexp/r;
-  for(int k=0;k<3;k++){
-    force[3*i+k] = force[3*i+k] + m_force*delta_r[k];
-    force[3*j+k] = force[3*j+k] - m_force*delta_r[k];
-  }
-
-  return 0;
-
-}
-
-inline void pair_force2(float r, float* delta_r, float mexp, float D,
-  float alpha, float* force){
-
-  float m_force = -2*Dalpha*(1-mexp)*mexp/r;
-  for(int k=0;k<3;k++){
-    force[k] = m_force*delta_r[k];
-  }
-
-  return 0;
-
-}
-
-
 float pair_energ(float energy_cut, float mexp, float D){
 
   return D*(1-mexp)*(1-mexp) - energy_cut;
 
 }
 
-// OPCION COMBINADA 1
-float pair_force_energ1(float r, float delta_r, float req, float D,
-      float alpha, int i, int j, float* force){
+inline void pair_force(float r, float* delta_r, float mexp, float D,
+  float alpha, float* force){
 
-  float mexp = exp(-alpha*(r-req));
-  float m_force = -2*alpha*D*(1-mexp)*mexp/r;
+  float m_force = -2*D*alpha*(1-mexp)*mexp/r;
   for(int k=0;k<3;k++){
-    force[3*i+k] = force[3*i+k] + m_force*delta_r[k];
-    force[3*j+k] = force[3*j+k] - m_force*delta_r[k];
+    force[k] = m_force*delta_r[k];
   }
-  return D*(1-mexp)*(1-mexp);
+
+  return;
 
 }
 
-// OPCION COMBINADA 2
-float pair_force_energ2(float r, float delta_r, float req, float D,
+// OPCION DEVOLVIENDO SOLO MODULO DE FUERZA
+float pair_force_mod(float r, float mexp, float D, float alpha){
+
+  return -2*D*alpha*(1-mexp)*mexp/r;
+
+}
+
+// OPCION COMBINADA SIN PARAMETROS
+float pair_force_energ_sin_param(float r, float* delta_r, float req, float D,
       float alpha, float* force){
 
   float mexp = exp(-alpha*(r-req));
@@ -96,6 +75,19 @@ float pair_force_energ2(float r, float delta_r, float req, float D,
   return D*(1-mexp)*(1-mexp);
 
 }
+
+// OPCION COMBINADA CON PARAMETROS
+float pair_force_energ_con_param(float r, float delta_r, float mexp, float D,
+      float alpha, float* force){
+
+  float m_force = -2*alpha*D*(1-mexp)*mexp/r;
+  for(int k=0;k<3;k++){
+    force[k] = m_force*delta_r[k];
+  }
+  return D*(1-mexp)*(1-mexp);
+
+}
+
 
 
 // Cuestiones:

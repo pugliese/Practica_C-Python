@@ -2,6 +2,63 @@ import numpy as np
 import itertools as it
 import ctypes as ct
 
+class Interaction(object):
+  """
+  Base Interaction class.
+  """
+  def __init__(self):
+    pass
+
+  def forces(self, x, v, pairs=None):
+    """
+    Main loop calculation.
+    NOTE: This is highly experimental and slow.
+    It is just meant to be a proof of concept for the main loop, but
+    has to change *dramatically*, even in arity, when we want to add
+    lists of neighbors, parallelization and so on.
+    """
+    return np.zeros_like(x), 0.0
+
+class ShortRange(Interaction):
+  """
+  Base short-range class
+  """
+  def __init__(self, rcut, shift_style='None'):
+    """
+    Base short-range class
+    Parameters
+    ----------
+    rcut : float
+        The cut radius parameter
+    shift_style: {'None', 'Displace', 'Splines'}
+        Shift style when approaching rcut
+    .. note:: 'Splines' not implemented yet
+    """
+    self.rcut = rcut
+    self.shift_style = shift_style
+    super().__init__()
+
+  def forces(self, x, v, pairs=None):
+    """
+    Calculate Lennard-Jones force
+    """
+    energ = 0
+    forces = np.zeros_like(x)
+    if pairs is None:
+      pairs = np.array(list(it.combinations(range(len(x)), 2)), dtype=np.int64)
+    for i, j in pairs:
+      f = self.pair_force(x[i], x[j])
+      energ += self.pair_energ(x[i], x[j])
+      forces[i] += f
+      forces[j] -= f
+    return forces, energ
+
+  def pair_force(self, s1, s2):
+    return np.array([0, 0, 0], dtype=np.float32)
+
+  def pair_energ(self, s1, s2):
+    return 0.0
+
 mor = ct.CDLL('./morse_pot.so')
 morseforces_c = mor.forces
 morseforces_c.argtypes = [ct.c_voidp, ct.c_voidp, ct.c_longlong, ct.c_float,
