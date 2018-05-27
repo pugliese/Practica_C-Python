@@ -69,7 +69,7 @@ float forces1(float *x, long int* pairs, long int npairs,
     int j = pairs[2*l+1];
 
     for (int k = 0; k < 3; k++) {
-      delta_r[3] = x[3*i+k]-x[3*j+k];
+      delta_r[k] = x[3*i+k]-x[3*j+k];
     }
 
     float r = 0;
@@ -108,7 +108,7 @@ float forces2(float *x, long int* pairs, long int npairs,
     int j = pairs[2*l+1];
 
     for (int k = 0; k < 3; k++) {
-      delta_r[3] = x[3*i+k]-x[3*j+k];
+      delta_r[k] = x[3*i+k]-x[3*j+k];
     }
 
     float r = 0;
@@ -148,7 +148,7 @@ float forces3(float *x, long int* pairs, long int npairs,
     int j = pairs[2*l+1];
 
     for (int k = 0; k < 3; k++) {
-      delta_r[3] = x[3*i+k]-x[3*j+k];
+      delta_r[k] = x[3*i+k]-x[3*j+k];
     }
 
     float r = 0;
@@ -189,7 +189,7 @@ float forces4(float *x, long int* pairs, long int npairs,
     int j = pairs[2*l+1];
 
     for (int k = 0; k < 3; k++) {
-      delta_r[3] = x[3*i+k]-x[3*j+k];
+      delta_r[k] = x[3*i+k]-x[3*j+k];
     }
 
     float r = 0;
@@ -229,7 +229,7 @@ float forces5(float *x, long int* pairs, long int npairs,
     int j = pairs[2*l+1];
 
     for (int k = 0; k < 3; k++) {
-      delta_r[3] = x[3*i+k]-x[3*j+k];
+      delta_r[k] = x[3*i+k]-x[3*j+k];
     }
 
     float r = 0;
