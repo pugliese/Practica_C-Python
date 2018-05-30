@@ -77,7 +77,7 @@ float pair_force_energ_sin_param(float r, float* delta_r, float req, float D,
 }
 
 // OPCION COMBINADA CON PARAMETROS
-float pair_force_energ_con_param(float r, float delta_r, float mexp, float D,
+float pair_force_energ_con_param(float r, float* delta_r, float mexp, float D,
       float alpha, float* force){
 
   float m_force = -2*alpha*D*(1-mexp)*mexp/r;
