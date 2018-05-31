@@ -331,7 +331,7 @@ float forces6(float *x, long int* pairs, long int npairs,
 }
 
 
-// Desacopladas, devuelve modulo, encapsula potencial en 1 sola funcion
+// F+E, devuelve modulo, encapsula potencial
 
 float forces7(float *x, long int* pairs, long int npairs,
   float alpha,float D, float req, float rcut, float *force){
@@ -366,8 +366,7 @@ float forces7(float *x, long int* pairs, long int npairs,
 
 }
 
-// Desacopladas, devuelve modulo, encapsula potencial en 1 sola funcion
-// calcula energy_cut de antemano
+// F+E, devuelve modulo, encapsula potencial y calcula energy_cut 1 vez
 
 float forces8(float *x, long int* pairs, long int npairs,
   float alpha,float D, float req, float rcut, float *force){
