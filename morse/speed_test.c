@@ -29,6 +29,44 @@ float pair_force_mod(float r, float mexp, float D, float alpha){
 
 }
 
+// OPCION DE FORCES6
+
+float pair_energ_2(float r, float rcut, float req, float D, float alpha){
+
+  float mexp = exp(-alpha*(r-req));
+  float energy_cut = exp(-alpha*(rcut-req));
+  return D*(1-mexp)*(1-mexp) - energy_cut;
+
+}
+
+float pair_force_mod_2(float r, float req, float D, float alpha){
+
+  float mexp = exp(-alpha*(r-req));
+  return -2*D*alpha*(1-mexp)*mexp/r;
+
+}
+
+// OPCION DE FORCES7
+
+float pair_energ_force_mod(float r, float rcut, float req, float D,
+  float alpha, float* energy){
+
+  float mexp = exp(-alpha*(r-req));
+  float energy_cut = exp(-alpha*(rcut-req));
+  *energy = (float) D*(1-mexp)*(1-mexp) - energy_cut;
+  return -2*D*alpha*(1-mexp)*mexp/r;
+}
+
+// OPCION DE FORCES8
+
+float pair_energ_force_mod_2(float r, float req, float D,
+  float alpha, float* energy, float energy_cut){
+
+  float mexp = exp(-alpha*(r-req));
+  *energy = (float) D*(1-mexp)*(1-mexp) - energy_cut;
+  return -2*D*alpha*(1-mexp)*mexp/r;
+}
+
 // OPCION COMBINADA SIN PARAMETROS
 float pair_force_energ_sin_param(float r, float* delta_r, float req, float D,
       float alpha, float* force){
@@ -239,7 +277,6 @@ float forces5(float *x, long int* pairs, long int npairs,
     r = sqrt(r);
 
     if (r<rcut) {
-      float force_temp[3];
       float mexp = exp(-alpha*(r-req));
       float m_force = pair_force_mod(r,mexp,D,alpha);
       for (int k = 0; k < 3; k++){
@@ -254,93 +291,115 @@ float forces5(float *x, long int* pairs, long int npairs,
 
 }
 
-float tiempo(struct timespec t, struct timespec t0){
-  return ((long long)t.tv_sec - (long long)t0.tv_sec)+(t.tv_nsec-t0.tv_nsec)*1E-9;
+
+// Desacopladas, devuelve modulo, encapsula potencial
+
+float forces6(float *x, long int* pairs, long int npairs,
+  float alpha,float D, float req, float rcut, float *force){
+
+  float energy = 0;
+  float energy_cut = (1-exp(-alpha*(rcut-req)));
+  energy_cut = D*energy_cut*energy_cut;
+
+  for (int l = 0; l < npairs; l++) {
+    float delta_r[3];
+    int i = pairs[2*l];
+    int j = pairs[2*l+1];
+
+    for (int k = 0; k < 3; k++) {
+      delta_r[k] = x[3*i+k]-x[3*j+k];
+    }
+
+    float r = 0;
+    for (int k = 0; k < 3; k++) {
+      r = r + delta_r[k]*delta_r[k];
+    }
+    r = sqrt(r);
+
+    if (r<rcut) {
+      float m_force = pair_force_mod_2(r,req,D,alpha);
+      for (int k = 0; k < 3; k++){
+        force[3*i+k] += m_force*delta_r[k];
+        force[3*j+k] -= m_force*delta_r[k];
+      }
+      energy += pair_energ_2(r,rcut,req,D,alpha);
+    }
+  }
+
+  return energy;
+
 }
 
 
-int main(int argc, char **argv){
-// Parametro; cantidad de iteraciones
-  long int N;
-  sscanf(argv[1], "%ld", &N);
-// Parametros dummies
-  float x[9];
-  x[0] = 0;
-  x[1] = 0;
-  x[2] = 0;
-  x[3] = 1;
-  x[4] = 2;
-  x[5] = 3;
-  x[6] = -1;
-  x[7] = -2;
-  x[8] = -3;
-  float force[9];
-  for (int l = 0; l < 6; l++){
-    force[l] = 0;
-  }
-  long int pairs[4] = {0,1,0,2};
+// Desacopladas, devuelve modulo, encapsula potencial en 1 sola funcion
 
-// Corrida principal
-// Datos
-  int t0,t1,t2,t3,t4,t5;
-  t0 = time(NULL);
-  for (int l = 0; l < N; l++){
-    forces1(x,pairs,2,1,1,1,5,force);
-  }
-  t1 = time(NULL)-t0;
-  t0 = time(NULL);
-  for (int l = 0; l < N; l++){
-    forces2(x,pairs,2,1,1,1,5,force);
-  }
-  t2 = time(NULL)-t0;
-  t0 = time(NULL);
-  for (int l = 0; l < N; l++){
-    forces3(x,pairs,2,1,1,1,5,force);
-  }
-  t3 = time(NULL)-t0;
-  t0 = time(NULL);
-  for (int l = 0; l < N; l++){
-    forces4(x,pairs,2,1,1,1,5,force);
-  }
-  t4 = time(NULL)-t0;
-  t0 = time(NULL);
-  for (int l = 0; l < N; l++){
-    forces5(x,pairs,2,1,1,1,5,force);
-  }
-  t5 = time(NULL)-t0;
+float forces7(float *x, long int* pairs, long int npairs,
+  float alpha,float D, float req, float rcut, float *force){
 
-  printf("%ld: %d %d %d %d %d\n", N, t1, t2, t3, t4, t5);
+  float energy = 0;
 
-// // Corrida principal
-//   struct timespec t0, t1, t2, t3, t4, t5;
-//   int a;
-//   a = clock_gettime( CLOCK_REALTIME, &t0);
-//   printf( "%d\n", a);
-//   for (int l = 0; l < N; l++){
-//     forces1(x,pairs,2,1,1,1,5,force);
-//   }
-//   a = clock_gettime( CLOCK_REALTIME, &t1);
-//   printf( "%d\n", a);
-//   for (int l = 0; l < N; l++){
-//     forces2(x,pairs,2,1,1,1,5,force);
-//   }
-//   a = clock_gettime( CLOCK_REALTIME, &t2);
-//   printf( "%d\n", a);
-//   for (int l = 0; l < N; l++){
-//     forces3(x,pairs,2,1,1,1,5,force);
-//   }
-//   a = clock_gettime( CLOCK_REALTIME, &t3);
-//   printf( "%d\n", a);
-//   for (int l = 0; l < N; l++){
-//     forces4(x,pairs,2,1,1,1,5,force);
-//   }
-//   a = clock_gettime( CLOCK_REALTIME, &t4);
-//   printf( "%d\n", a);
-//   for (int l = 0; l < N; l++){
-//     forces5(x,pairs,2,1,1,1,5,force);
-//   }
-//   a = clock_gettime( CLOCK_REALTIME, &t5);
-//   printf( "%d\n", a);
-//
-//   printf("%d; %2.9f %2.9f %2.9f %2.9f %2.9f\n", N, tiempo(t1,t0), tiempo(t2,t1), tiempo(t3,t2), tiempo(t4,t3), tiempo(t5,t4));
+  for (int l = 0; l < npairs; l++) {
+    float delta_r[3];
+    int i = pairs[2*l];
+    int j = pairs[2*l+1];
+
+    for (int k = 0; k < 3; k++) {
+      delta_r[k] = x[3*i+k]-x[3*j+k];
+    }
+
+    float r = 0;
+    for (int k = 0; k < 3; k++) {
+      r = r + delta_r[k]*delta_r[k];
+    }
+    r = sqrt(r);
+
+    if (r<rcut) {
+      float m_force = pair_energ_force_mod(r,rcut,req,D,alpha, &energy);
+      for (int k = 0; k < 3; k++){
+        force[3*i+k] += m_force*delta_r[k];
+        force[3*j+k] -= m_force*delta_r[k];
+      }
+    }
+  }
+
+  return energy;
+
+}
+
+// Desacopladas, devuelve modulo, encapsula potencial en 1 sola funcion
+// calcula energy_cut de antemano
+
+float forces8(float *x, long int* pairs, long int npairs,
+  float alpha,float D, float req, float rcut, float *force){
+
+  float energy = 0;
+  float energy_cut = 0;
+  pair_energ_force_mod_2(rcut,req,D,alpha, &energy_cut, 0);
+
+  for (int l = 0; l < npairs; l++) {
+    float delta_r[3];
+    int i = pairs[2*l];
+    int j = pairs[2*l+1];
+
+    for (int k = 0; k < 3; k++) {
+      delta_r[k] = x[3*i+k]-x[3*j+k];
+    }
+
+    float r = 0;
+    for (int k = 0; k < 3; k++) {
+      r = r + delta_r[k]*delta_r[k];
+    }
+    r = sqrt(r);
+
+    if (r<rcut) {
+      float m_force = pair_energ_force_mod_2(r,req,D,alpha, &energy, energy_cut);
+      for (int k = 0; k < 3; k++){
+        force[3*i+k] += m_force*delta_r[k];
+        force[3*j+k] -= m_force*delta_r[k];
+      }
+    }
+  }
+
+  return energy;
+
 }
