@@ -100,6 +100,7 @@ float forces1(float *x, long int* pairs, long int npairs,
   float energy = 0;
   float energy_cut = (1-exp(-alpha*(rcut-req)));
   energy_cut = D*energy_cut*energy_cut;
+  int m = 0;
 
   for (int l = 0; l < npairs; l++) {
     float delta_r[3];
@@ -117,6 +118,7 @@ float forces1(float *x, long int* pairs, long int npairs,
     r = sqrt(r);
 
     if (r<rcut) {
+      m++;
       float mexp = exp(-alpha*(r-req));
       float m_force = -2*alpha*D*(1-mexp)*mexp/r;
       for(int k=0;k<3;k++){

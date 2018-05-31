@@ -32,7 +32,7 @@ speed = ct.CDLL('./speed_test.so')
 (speed.forces8).restype = ct.c_float
 
 def particulas(Npart):
-    x = np.zeros((Npart,3))
+    x = np.zeros((Npart,3), dtype=np.float32)
     n3 = int(np.ceil(Npart**(1.0/3)))
     i = 0
     for p in it.product(range(n3),range(n3),range(n3)):
@@ -99,7 +99,7 @@ def comp(Niter,Npart,Nstat=1,fs=range(1,9)):
     dummy_forcesp = (dummy_forces).ctypes.data_as(ct.c_voidp)
     for j in range(len(fs)):
         f = lambda : eval("speed.forces"+str(fs[j]))(xp,pairsp,len(pairs),1,1,1,100,dummy_forcesp)
-        print("forces"+str(fs[j]))
+        #print("forces"+str(fs[j]))
         for i in range(Nstat):
             t0 = datetime.now()
             for k in range(Niter):
@@ -123,8 +123,8 @@ if (1<len(sys.argv)):
         Nstat = int(sys.argv[3])
     T = comp(Niter,Npart,Nstat)
     print(T)
-    plt.title("Niter="+str(Niter)+" | Npart="+str(Npart)+" | Nstat="+str(Nstat))
-    plt.xlabel("Implementacion")
-    plt.ylabel("Tiempo [s]")
-    plt.bar(range(1,9),T)
-    plt.show()
+    # plt.title("Niter="+str(Niter)+" | Npart="+str(Npart)+" | Nstat="+str(Nstat))
+    # plt.xlabel("Implementacion")
+    # plt.ylabel("Tiempo [s]")
+    # plt.bar(range(1,9),T)
+    # plt.show()
