@@ -118,11 +118,18 @@ def graf_barras(T):
 if (1<len(sys.argv)):
     Niter = int(sys.argv[1])
     Npart = int(sys.argv[2])
-    Nstat = 1
-    if(len(sys.argv)==4):
-        Nstat = int(sys.argv[3])
-    T = comp(Niter,Npart,Nstat)
-    print(T)
+    nargs = len(sys.argv)
+    Nstat = int(sys.argv[3])
+    fs = range(1,9)
+    filename = sys.argv[4]
+    if(nargs>5):
+        fs = []
+        for i in range(5,nargs):
+            fs.append(int(sys.argv[i]))
+    file = open(filename, "a")
+    T = comp(Niter,Npart,Nstat,fs)
+    np.savetxt(file,T)
+    file.close()
     # plt.title("Niter="+str(Niter)+" | Npart="+str(Npart)+" | Nstat="+str(Nstat))
     # plt.xlabel("Implementacion")
     # plt.ylabel("Tiempo [s]")
