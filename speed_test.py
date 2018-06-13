@@ -11,7 +11,8 @@ fs = fs.split(" ")
 Os = file.readline()
 Os = Os[2:len(Os)-1]
 Os = Os.split(" ")
-data = np.loadtxt(filename,delimiter=",")
+Npart = int(file.readline()[1:])
+data = np.loadtxt(filename,delimiter=",")*2/(Npart*(Npart+1))
 file.close()
 
 if (sys.argv[1]=="f"):
@@ -19,17 +20,19 @@ if (sys.argv[1]=="f"):
         plt.figure(i+1)
         plt.title("Implementacion "+str(i+1))
         plt.xlabel("Flag")
-        plt.ylabel("Tiempo [s]")
+        plt.ylabel("Tiempo por par [s]")
         print(range(len(Os)),data[:,i])
         plt.bar(range(len(Os)),data[:,i])
+        plt.grid()
         plt.xticks(range(len(Os)), Os)
 if (sys.argv[1]=="i"):
     for i in range(len(Os)):
         plt.figure(i+1)
         plt.title("-"+Os[i])
         plt.xlabel("Implementacion")
-        plt.ylabel("Tiempo [s]")
+        plt.ylabel("Tiempo por par [s]")
         plt.bar(range(len(fs)),data[i,:])
+        plt.grid()
         plt.xticks(range(len(fs)), fs)
 if (sys.argv[1]=="j"):
     N = (len(fs)+1)*len(Os)
@@ -45,5 +48,6 @@ if (sys.argv[1]=="j"):
     plt.bar(X,Y)
     plt.axis([0,N,0,np.max(np.max(data))*1.05])
     plt.xticks(X,labels)
-    plt.ylabel("Tiempo [s]")
+    plt.grid()
+    plt.ylabel("Tiempo por par [s]")
 plt.show()
