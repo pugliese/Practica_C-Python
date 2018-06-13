@@ -8,6 +8,7 @@ Nstat=1000
 rm $filename
 echo "#" ${fs[@]} >> $filename
 echo "#" ${Os[@]} >> $filename
+echo "#" $Npart >> $filename
 for O in ${Os[@]}
 do
   #make rmv
