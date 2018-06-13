@@ -29,13 +29,17 @@ float pair_energ_force_mod(float r, float rcut, float req, float D, float alpha,
 float pair_energ_force_mod_2(float r, float req, float D, float alpha,
               float* energy, float energy_cut);
 
+float pair_force_mod_3(float r, float req, float D, float alpha);
+float pair_energ_3(float r, float energy_cut, float req, float D, float alpha);
+
 float forces6(float *x, long int* pairs, long int npairs,
               float alpha,float D, float req, float rcut, float *force);
 float forces7(float *x, long int* pairs, long int npairs,
               float alpha,float D, float req, float rcut, float *force);
 float forces8(float *x, long int* pairs, long int npairs,
               float alpha,float D, float req, float rcut, float *force);
-
+float forces9(float *x, long int* pairs, long int npairs,
+              float alpha,float D, float req, float rcut, float *force);
 
 
 #endif
@@ -50,4 +54,5 @@ float forces8(float *x, long int* pairs, long int npairs,
 6) Desacopladas, devuelve modulo, encapsula potencial
 7) F+E, devuelve modulo, encapsula potencial
 8) F+E, devuelve modulo, encapsula potencial y calcula energy_cut 1 vez
+9) Desacopladas, devuelve modulo, encapsula potencial y calcula energy_cut 1 vez
 */

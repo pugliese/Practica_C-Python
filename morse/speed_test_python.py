@@ -30,6 +30,9 @@ speed = ct.CDLL('./speed_test.so')
 (speed.forces8).argtypes = [ct.c_voidp, ct.c_voidp, ct.c_longlong, ct.c_float,
                        ct.c_float, ct.c_float, ct.c_float, ct.c_voidp]
 (speed.forces8).restype = ct.c_float
+(speed.forces9).argtypes = [ct.c_voidp, ct.c_voidp, ct.c_longlong, ct.c_float,
+                       ct.c_float, ct.c_float, ct.c_float, ct.c_voidp]
+(speed.forces9).restype = ct.c_float
 
 def particulas(Npart):
     x = np.zeros((Npart,3), dtype=np.float32)
@@ -126,12 +129,12 @@ if (1<len(sys.argv)):
         fs = []
         for i in range(5,nargs):
             fs.append(int(sys.argv[i]))
-    file = open(filename, "a")
+    formato = "%f"
+    for i in range(len(fs)-1):
+        formato = formato + ", %f"
+    formato += "\n"
+    file = open(filename, 'a')
     T = comp(Niter,Npart,Nstat,fs)
-    np.savetxt(file,T)
+    #np.savetxt(file,T,newline=",")
+    file.write(formato %tuple(T))
     file.close()
-    # plt.title("Niter="+str(Niter)+" | Npart="+str(Npart)+" | Nstat="+str(Nstat))
-    # plt.xlabel("Implementacion")
-    # plt.ylabel("Tiempo [s]")
-    # plt.bar(range(1,9),T)
-    # plt.show()
