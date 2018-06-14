@@ -12,7 +12,7 @@ Os = file.readline()
 Os = Os[2:len(Os)-1]
 Os = Os.split(" ")
 Npart = int(file.readline()[1:])
-data = np.loadtxt(filename,delimiter=",")*2/(Npart*(Npart+1))
+data = np.loadtxt(filename,delimiter=",")*2/(Npart*(Npart-1))
 file.close()
 
 if (sys.argv[1]=="f"):
