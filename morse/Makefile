@@ -8,7 +8,7 @@ OBJECTS = $(patsubst %.c, %.o, $(SOURCE))
 LIBRARIES = $(patsubst %.c, %.so, $(SOURCE))
 
 
-FLAGS = -O$(O) -lm
+FLAGS = -O$(O) -lm -std=gnu99
 
 default: lib
 
