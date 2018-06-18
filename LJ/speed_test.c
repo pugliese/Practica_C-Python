@@ -20,24 +20,30 @@ float pair_force_mod(float r2inv, float r6inv, float ljf1, float ljf2){
 
 float pair_energ_2(float rsq, float energy_cut, float eps, float sigma){
 
+  float lje1 = 4 * eps * pow(sigma, 12);
+  float lje2 = 4 * eps * pow(sigma, 6);
   float r2inv = sigma*sigma/rsq;    // 1/r2 en unidades de sigma
   float r6inv = r2inv*r2inv*r2inv;  // 1/r6 en unidades de sigma
-  return 4*eps*r6inv * (r6inv - 1) - energy_cut;
+  return r6inv * (lje1 * r6inv - lje2);// - energy_cut;
+  //return 4*eps*r6inv * (r6inv - 1) - energy_cut;
 
 }
 
 float pair_force_mod_2(float rsq, float eps, float sigma){
 
+  float ljf1 = 48 * eps * pow(sigma, 12);
+  float ljf2 = 24 * eps * pow(sigma, 6);
   float r2inv = sigma*sigma/rsq;    // 1/r2 en unidades de sigma
   float r6inv = r2inv*r2inv*r2inv;  // 1/r6 en unidades de sigma
-  return 24*eps*r6inv *(2*r6inv - 1)/rsq;
+  return r2inv * r6inv * (ljf1 * r6inv - ljf2);
+  //return 24*eps*r6inv *(2*r6inv - 1)/rsq;
 
 }
 
 
 // Sin funciones aparte
 float forces1(float *x, long int* pairs, long int npairs, float eps,
-             float sigma, float rcut, float *force) {
+              float sigma, float rcut, float *force) {
   float energ = 0.0;
   float ljf1 = 48 * eps * pow(sigma, 12);
   float ljf2 = 24 * eps * pow(sigma, 6);
@@ -75,7 +81,7 @@ float forces1(float *x, long int* pairs, long int npairs, float eps,
 
 // Desacopladas, devuelve modulo
 float forces2(float *x, long int* pairs, long int npairs, float eps,
-             float sigma, float rcut, float *force) {
+              float sigma, float rcut, float *force) {
   float energ = 0.0;
   float ljf1 = 48 * eps * pow(sigma, 12);
   float ljf2 = 24 * eps * pow(sigma, 6);
@@ -112,7 +118,7 @@ float forces2(float *x, long int* pairs, long int npairs, float eps,
 
 // Desacopladas, devuelve modulo, encapsula potencial y calcula energy_cut 1 vez
 float forces3(float *x, long int* pairs, long int npairs, float eps,
-             float sigma, float rcut, float *force) {
+              float sigma, float rcut, float *force) {
 
   float energy = 0;
   float energy_cut = 0;
@@ -139,7 +145,8 @@ float forces3(float *x, long int* pairs, long int npairs, float eps,
         force[3*i+k] += mod_force*delta_r[k];
         force[3*j+k] -= mod_force*delta_r[k];
       }
-      energy += pair_energ_2(rsq, energy_cut, eps, sigma);
+      //energy += pair_energ_2(rsq, energy_cut, eps, sigma);
+      energy += pair_energ_2(rsq, 0, eps, sigma) - energy_cut;
     }
   }
 
