@@ -5,10 +5,10 @@
 void pair_force(float r, float* delta_r, float mexp, float D,
               float alpha, float* force);
 float pair_energ(float energy_cut, float mexp, float D);
-float pair_force_mod(float r, float mexp, float D, float alpha);
-float pair_force_energ_con_param(float r, float* delta_r, float req, float D,
+inline float pair_force_mod(float r, float mexp, float D, float alpha);
+inline float pair_force_energ_con_param(float r, float* delta_r, float req, float D,
       float alpha, float* force);
-float pair_force_energ_sin_param(float r, float* delta_r, float mexp, float D,
+inline float pair_force_energ_sin_param(float r, float* delta_r, float mexp, float D,
             float alpha, float* force);
 
 float forces1(float *x, long int* pairs, long int npairs, float alpha,
@@ -23,14 +23,14 @@ float forces5(float *x, long int* pairs, long int npairs, float alpha,
               float D, float req, float rcut, float *force);
 
 
-float pair_energ_2(float r, float rcut, float req, float D, float alpha);
-float pair_force_mod_2(float r, float req, float D, float alpha);
-float pair_energ_force_mod(float r, float rcut, float req, float D, float alpha, float* energy);
-float pair_energ_force_mod_2(float r, float req, float D, float alpha,
+inline float pair_energ_2(float r, float rcut, float req, float D, float alpha);
+inline float pair_force_mod_2(float r, float req, float D, float alpha);
+inline float pair_energ_force_mod(float r, float rcut, float req, float D, float alpha, float* energy);
+inline float pair_energ_force_mod_2(float r, float req, float D, float alpha,
               float* energy, float energy_cut);
 
-float pair_force_mod_3(float r, float req, float D, float alpha);
-float pair_energ_3(float r, float energy_cut, float req, float D, float alpha);
+inline float pair_force_mod_3(float r, float req, float D, float alpha);
+inline float pair_energ_3(float r, float energy_cut, float req, float D, float alpha);
 
 float forces6(float *x, long int* pairs, long int npairs,
               float alpha,float D, float req, float rcut, float *force);
