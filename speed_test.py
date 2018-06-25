@@ -12,40 +12,42 @@ Os = file.readline()
 Os = Os[2:len(Os)-1]
 Os = Os.split(" ")
 Npart = int(file.readline()[1:])
-data = np.loadtxt(filename,delimiter=",")*2/(Npart*(Npart+1))
+data = np.loadtxt(filename,delimiter=",")*2/(Npart*(Npart-1))
 file.close()
 
-if (sys.argv[1]=="f"):
-    for i in range(len(fs)):
-        plt.figure(i+1)
-        plt.title("Implementacion "+str(i+1))
-        plt.xlabel("Flag")
-        plt.ylabel("Tiempo por par [s]")
-        print(range(len(Os)),data[:,i])
-        plt.bar(range(len(Os)),data[:,i])
-        plt.grid()
-        plt.xticks(range(len(Os)), Os)
-if (sys.argv[1]=="i"):
-    for i in range(len(Os)):
-        plt.figure(i+1)
-        plt.title("-"+Os[i])
-        plt.xlabel("Implementacion")
-        plt.ylabel("Tiempo por par [s]")
-        plt.bar(range(len(fs)),data[i,:])
-        plt.grid()
-        plt.xticks(range(len(fs)), fs)
+# if (sys.argv[1]=="f"):
+#     for i in range(len(fs)):
+#         plt.figure(i+1)
+#         plt.title("Implementacion "+str(i+1))
+#         plt.xlabel("Flag")
+#         plt.ylabel("Tiempo por par [s]")
+#         plt.bar(range(len(Os)),data[:,2*i],yerror=data[:,2*i+1])
+#         plt.grid()
+#         plt.xticks(range(len(Os)), Os)
+# if (sys.argv[1]=="i"):
+#     for i in range(len(Os)):
+#         plt.figure(i+1)
+#         plt.title("-"+Os[i])
+#         plt.xlabel("Implementacion")
+#         plt.ylabel("Tiempo por par [s]")
+#         plt.bar(range(len(fs)),data[2*i,:],data[2*i+1,:])
+#         plt.grid()
+#         plt.xticks(range(len(fs)), fs)
 if (sys.argv[1]=="j"):
     N = (len(fs)+1)*len(Os)
     X = range(N)
     Y = []
+    Yerr = []
     labels = []
     for i in range(len(Os)):
         labels.append("O"+Os[i]+":")
         Y.append(0)
+        Yerr.append(0)
         for j in range(len(fs)):
-            Y.append(data[i,j])
+            Y.append(data[2*i,j])
+            Yerr.append(data[2*i+1,j])
             labels.append(fs[j])
-    plt.bar(X,Y)
+    plt.bar(X,Y,yerr = Yerr)
     plt.axis([0,N,0,np.max(np.max(data))*1.05])
     plt.xticks(X,labels)
     plt.grid()

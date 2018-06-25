@@ -94,6 +94,7 @@ def tiempo_part(fs,Niter,Npart,Nstat=1):
 
 def comp(Niter,Npart,Nstat=1,fs=range(1,9)):
     prom = np.zeros(len(fs))
+    sigma = np.zeros(len(fs))
     x = particulas(Npart)
     xp = x.ctypes.data_as(ct.c_voidp)
     pairs = np.array(list(it.combinations(range(len(x)), 2)), dtype=np.int64)
@@ -109,7 +110,10 @@ def comp(Niter,Npart,Nstat=1,fs=range(1,9)):
                 f()
             t1 = datetime.now()
             prom[j] += (t1-t0).total_seconds()/Nstat
-    return prom
+            sigma[j] += (t1-t0).total_seconds()**2/Nstat
+    sigma -= prom*prom
+    sigma = np.sqrt(sigma)
+    return prom,sigma
 
 def graf_barras(T):
     #plt.title("Niter="+str(Niter)+" | Npart="+str(Npart)+" | Nstat="+str(Nstat))
@@ -134,7 +138,8 @@ if (1<len(sys.argv)):
         formato = formato + ", %f"
     formato += "\n"
     file = open(filename, 'a')
-    T = comp(Niter,Npart,Nstat,fs)
+    T,T_std = comp(Niter,Npart,Nstat,fs)
     #np.savetxt(file,T,newline=",")
     file.write(formato %tuple(T))
+    file.write(formato %tuple(T_std))
     file.close()
