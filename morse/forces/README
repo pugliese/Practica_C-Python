@@ -1,0 +1,10 @@
+Implementacion de los forces:
+1) Sin funciones aparte
+2) F+E con parametros precalculados
+3) F+E sin parametros precalculados
+4) Desacopladas, devuelve vector fuerza
+5) Desacopladas, devuelve modulo de fuerza
+6) Desacopladas, devuelve modulo, encapsula potencial
+7) F+E, devuelve modulo, encapsula potencial
+8) F+E, devuelve modulo, encapsula potencial y calcula energy_cut 1 vez
+9) Desacopladas, devuelve modulo, encapsula potencial y calcula energy_cut 1 vez
