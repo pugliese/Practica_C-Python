@@ -40,8 +40,7 @@ float forces3(float *x, long int* pairs, long int npairs,
 
     if (r<rcut) {
       float force_temp[3];
-      float mexp = exp(-alpha*(r-req));
-      energy += pair_force_energ_sin_param(r,delta_r,mexp,D,alpha,force_temp);
+      energy += pair_force_energ_sin_param(r,delta_r,req,D,alpha,force_temp);
       for (int k = 0; k < 3; k++){
         force[3*i+k] += force_temp[k];
         force[3*j+k] -= force_temp[k];

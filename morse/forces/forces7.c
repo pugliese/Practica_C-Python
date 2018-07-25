@@ -8,7 +8,8 @@ float pair_energ_force_mod(float r, float rcut, float req, float D,
 
   float mexp = exp(-alpha*(r-req));
   float energy_cut = exp(-alpha*(rcut-req));
-  *energy = (float) D*(1-mexp)*(1-mexp) - energy_cut;
+  energy_cut = D*(1-energy_cut)*(1-energy_cut);
+  *energy = *energy + (float) D*(1-mexp)*(1-mexp) - energy_cut;
   return -2*D*alpha*(1-mexp)*mexp/r;
 }
 

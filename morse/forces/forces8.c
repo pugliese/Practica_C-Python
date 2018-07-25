@@ -7,7 +7,7 @@ float pair_energ_force_mod_2(float r, float req, float D,
   float alpha, float* energy, float energy_cut){
 
   float mexp = exp(-alpha*(r-req));
-  *energy = (float) D*(1-mexp)*(1-mexp) - energy_cut;
+  *energy = *energy + (float) D*(1-mexp)*(1-mexp) - energy_cut;
   return -2*D*alpha*(1-mexp)*mexp/r;
 }
 

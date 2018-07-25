@@ -7,6 +7,7 @@ float pair_energ_2(float r, float rcut, float req, float D, float alpha){
 
   float mexp = exp(-alpha*(r-req));
   float energy_cut = exp(-alpha*(rcut-req));
+  energy_cut = D*(1-energy_cut)*(1-energy_cut);
   return D*(1-mexp)*(1-mexp) - energy_cut;
 
 }
