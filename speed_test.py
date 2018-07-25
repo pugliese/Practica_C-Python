@@ -61,4 +61,16 @@ if (sys.argv[1]=="e"):
     plt.title(r'$N_{stat} = $'+str(Nstat))
     plt.grid()
     file.close()
+if (sys.argv[1]=="i"):
+    Os = file.readline()
+    Os = Os.split(", ")
+    data = np.loadtxt(filename,delimiter=",",skiprows=1)
+    Npart = (len(data[0,:])-1)/3
+    nfs = len(data[:,0])/3
+    distintos = []
+    for j in range(nfs):
+        for i in range(3):
+            if(np.prod(data[j+i*nfs,:]==data[j,:])==False):
+                distintos.append([i,j])
+    print distintos
 plt.show()

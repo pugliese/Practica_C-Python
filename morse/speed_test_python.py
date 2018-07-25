@@ -115,6 +115,18 @@ def comp(Niter,Npart,Nstat=1,fs=range(1,9)):
     sigma = np.sqrt(sigma)
     return prom,sigma
 
+def valor(j,Npart):
+    x = particulas(Npart)
+    xp = x.ctypes.data_as(ct.c_voidp)
+    pairs = np.array(list(it.combinations(range(len(x)), 2)), dtype=np.int64)
+    pairsp = pairs.ctypes.data_as(ct.c_voidp)
+    dummy_forces = x.copy()
+    dummy_forcesp = (dummy_forces).ctypes.data_as(ct.c_voidp)
+    energia = eval("speed.forces"+str(j))(xp,pairsp,len(pairs),1,1,1,100,dummy_forcesp)
+    return energia, dummy_forces
+
+
+
 def graf_barras(T):
     #plt.title("Niter="+str(Niter)+" | Npart="+str(Npart)+" | Nstat="+str(Nstat))
     plt.xlabel("Implementacion")
@@ -123,7 +135,7 @@ def graf_barras(T):
     plt.show()
 
 nargs = len(sys.argv)
-if (6<nargs):
+if (1<nargs):
     if sys.argv[1]=="c":
         Niter = int(sys.argv[2])
         Npart = int(sys.argv[3])
@@ -165,4 +177,19 @@ if (6<nargs):
             T,T_std = tiempo_part(1,n,Npart,Nstat)
             file.write(formato %tuple(T))
             file.write(formato %tuple(T_std))
+        file.close()
+    if sys.argv[1]=="i":
+        Npart = int(sys.argv[2])
+        filename = sys.argv[3]
+        file = open(filename, 'a')
+        #file.write("%d, %d, %d" %(Npart_bas, Nstat, Niter[0]))
+        formato = "%f"
+        for i in range(3*Npart):
+            formato = formato + ", %f"
+        formato += "\n"
+        for j in range(1,10):
+            E,F = valor(j,Npart)
+            data = np.reshape(F,(1,3*Npart))
+            data = np.append(data[0],[E])
+            file.write(formato %tuple(data))
         file.close()
