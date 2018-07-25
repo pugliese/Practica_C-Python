@@ -1,6 +1,6 @@
 Os=(0 1 2 3 fast)
 fs=(1 2 3)
-filename="data.txt"
+filename="data2.txt"
 Niter=1
 Npart=216
 Nstat=1000

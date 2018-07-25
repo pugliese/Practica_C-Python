@@ -1,0 +1,5 @@
+Las funciones forces son:
+1) Sin funciones aparte
+2) Desacopladas, devuelve modulo de fuerza, toma parametros
+3) Desacopladas, devuelve modulo, encapsula potencial y calcula energy_cut 1 vez
+

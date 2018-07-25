@@ -5,20 +5,16 @@ LD = $(CC)
 
 SOURCE = $(wildcard *.c)
 OBJECTS = $(patsubst %.c, %.o, $(SOURCE))
-LIBRARIES = $(patsubst %.c, %.so, $(SOURCE))
-
 
 FLAGS = -O$(O) -lm -std=gnu99
 
-default: lib
-
-lib: $(LIBRARIES)
+default: forces.so
 
 %.o: %.c
 	$(CC) $(FLAGS) -c -fPIC $^
 
-%.so: %.o
-	$(LD) -shared $^ -o $@
+forces.so: $(OBJECTS)
+	$(CC) -shared $^ -o forces.so
 
 clean:
-	rm -rfv $(OBJECTS) $(LIBRARIES)
+	rm -rfv $(OBJECTS) forces.so

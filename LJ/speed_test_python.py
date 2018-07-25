@@ -5,7 +5,7 @@ import sys
 from datetime import datetime
 import ctypes as ct
 
-speed = ct.CDLL('./speed_test.so')
+speed = ct.CDLL('./forces.so')
 (speed.forces1).argtypes = [ct.c_voidp, ct.c_voidp, ct.c_longlong, ct.c_float,
                        ct.c_float, ct.c_float, ct.c_voidp]
 (speed.forces1).restype = ct.c_float
