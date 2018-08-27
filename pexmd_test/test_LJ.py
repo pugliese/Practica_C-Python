@@ -22,7 +22,7 @@ pos = np.array([.5,.5,.5]) + np.array([[0,0,0],[0,0,1],[0,1,0],[0,1,1],[1,0,0],[
 part.x = pos
 part.mass = np.zeros((8,1),dtype=np.float32)+1
 # Caja
-bx = Box.Box([0,0,0],[2,2,2])
+bx = Box.Box([0,0,0],[2,2,2],'Fixed')
 # Interaccion
 LJ = Interaction.LennardJones(1.2, 1, 0.2)
 # Integrador
