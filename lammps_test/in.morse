@@ -1,34 +1,34 @@
-# 3d Morse melt
+# 3d Morse
 
 #Initialization
+boundary 	f f f
 units		lj
 atom_style	atomic
-boundary 	f f f
 pair_style	morse 2.5
 
 # Atom definition
-lattice		fcc 0.8442 	#?
-region		box block 0 10 0 10 0 10
+lattice		sc  2#?
+region		box block 0 8 0 8 0 8
 create_box	1 box
 create_atoms	1 box
 mass		1 1.0
+timestep 0.0005
 
 # Settings
 velocity	all create 3.0 87287
-pair_coeff	1 1 10.0 1.0 1.0 2.5
-neighbor	0.3 bin
-neigh_modify	every 20 delay 0 check no page 1000000 one 20000
+pair_coeff	1 1 0.5 1.0 1.0 2.5
+neighbor	1.5 bin
+neigh_modify	every 1 delay 0 check yes page 1000000 one 20000
 compute 	T all temp
 compute 	Ecin all ke
 compute 	Epot all pe
 variable 	Temp equal c_T
 variable 	E equal c_Ecin+c_Epot
-fix 		3 all print 400 "${Temp} $E" file "../../../Desktop/data.txt" screen no
-fix 		4 all nvt temp 10.0 1.0 100.0
+fix 		3 all print 40 "${Temp} $E" file "../../Practica_C-Python/lammps_test/data.txt" screen no
+fix 		4 all nvt temp 3.0 1.0 100.0
 
-#dump myDump all custom 10 ../../../Desktop/dump.atom type x y z vx vy vz
+dump myDump all custom 10 ../../Practica_C-Python/lammps_test/dump.lammpstrj type x y z vx vy vz
 
 # Run
-thermo 		500
-run		10000
-
+thermo 		1
+run		1000
