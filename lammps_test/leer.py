@@ -26,15 +26,26 @@ else:
     plt.show()
 
   if (sys.argv[1]=='t'):
+    n = 0
+    if (len(sys.argv)==4):
+      n = int(sys.argv[3])
     data = np.loadtxt(sys.argv[2], delimiter = ' ')
     plt.figure(1)
-    plt.plot(data[:,0], '.--')
+    plt.grid()
+    T = data[n:, 0]
+    E = data[n:, 1]
+    plt.plot(T, '.--')
     plt.ylabel('Temperatura')
     plt.figure(2)
-    plt.plot(data[:,1]/2048, '.--')
-    plt.ylabel('Energia por particula')
+    plt.grid()
+    plt.plot(E, '.--')
+    plt.ylabel('Energia')
     plt.figure(3)
+    plt.grid()
     plt.xlabel('Temperatura')
-    plt.ylabel('Energia por particula')
-    plt.plot(data[20:,0],data[20:,1]/2048, '.')
+    plt.ylabel('Energia')
+    plt.plot(T, E, 'b.')
+    m, b = np.polyfit(T, E, 1)
+    plt.plot(np.sort(T), np.sort(T)*m+b, "r-")
+    print(m, b)
     plt.show()
