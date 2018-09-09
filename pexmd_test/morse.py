@@ -102,7 +102,7 @@ class Morse(ShortRange):
     d = np.linalg.norm(s1-s2)
     if d > self.rcut:
       return np.zeros_like(s1)
-    mf = morsepairforce_c(d, self.req, self.D, self.alpha)*(s1-s2)/d
+    mf = morsepairforce_c(d, self.req, self.D, self.alpha)*(s1-s2)
     if self.shift_style == 'None':
       return mf
     elif self.shift_style == 'Displace':
